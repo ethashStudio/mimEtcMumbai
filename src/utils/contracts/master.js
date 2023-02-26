@@ -748,7 +748,7 @@ export default [
   {
     name: "BentoBoxV1",
     contractChain: "0x13881",
-    address: "0x48aFEccE1Ca13d3836A101EA76eB66FF5232BeD6",
+    address: "0x1758A028116EF7bd8cC99C1695A798624468e799",
     abi: [
       {
         inputs: [

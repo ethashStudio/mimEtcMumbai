@@ -1,11 +1,11 @@
 export default [
   {
-    name: "ETC",
+    name: "WETC",
     contractChain: "0x13881",
     id: 2,
     contract: {
       name: "CauldronMediumRiskV1",
-      address: "0x6b24275Fc8b1e937A8F1bb3280ce36FfC2d3b1dB",
+      address: "0xE075BB370e9139fD5B24Eb1dAfabD56bEdFed34D",
       abi: [
         {
           inputs: [
@@ -488,9 +488,9 @@ export default [
       ],
     },
     token: {
-      name: "ETC",
+      name: "WETC",
       decimals: 18,
-      address: "0xEb1FB5C46B56f25461662ee3F00D04F8878D3A94",
+      address: "0xF62b40F2f32a299D7387C3472A69A5a1bf1De664",
       oracleId: 1,
       oracleDatas: {
         multiply: "0x0000000000000000000000000000000000000000",
@@ -1373,7 +1373,7 @@ export default [
     pairToken: {
       name: "MIM",
       decimals: 18,
-      address: "0x41d5331D89f7b03cAE9019D39343cAcCb4bE06aB",
+      address: "0xD40c00998d74c6d67de594cf7c6893d11C0A3136",
       abi: [
         {
           anonymous: false,
