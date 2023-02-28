@@ -428,9 +428,17 @@ export default {
       console.log("updateMain", value);
       this.mainValue = value;
 
-      if (parseFloat(value) > parseFloat(this.maxMainValue)) {
-        this.mainValueError = `The value cannot be greater than ${this.maxMainValue}`;
-        return false;
+      if (this.actionType === "borrow") {
+        if (parseFloat(value) > 10000) {
+          this.mainValueError = `The value ETC cannot be greater than 10000, take care of your assets`;
+          return false;
+        }
+      }
+      if (this.actionType === "repay") {
+        if (parseFloat(value) > parseFloat(this.maxMainValue)) {
+          this.mainValueError = `The value cannot be greater than ${this.maxMainValue}`;
+          return false;
+        }
       }
 
       this.mainValueError = "";
@@ -455,73 +463,8 @@ export default {
         this.pairValueError = `You have insufficient collateral. Please enter a smaller amount or repay more.`;
         return false;
       }
-
-      if (this.pairValue) {
-        this.updatePairValue(this.pairValue);
-      }
-
-      if (this.percentValue && value) {
-        this.pairValue = (this.maxPairValue * this.percentValue) / this.ltv;
-      }
     },
-    updatePairValue(value) {
-      if (parseFloat(value) > parseFloat(this.maxPairValue)) {
-        this.pairValueError = `The value cannot be greater than ${this.maxPairValue}`;
-        return false;
-      }
 
-      if (this.actionType === "repay") {
-        if (!value) {
-          this.pairValueError = "";
-          this.pairValue = value;
-        }
-
-        const borrowedInDolarts = this.userTotalBorrowed / this.tokenPairToUsd;
-        const collateralInDolarts = this.userTotalCollateral / this.tokenToUsd;
-        const userHasDolars = collateralInDolarts - borrowedInDolarts;
-        const acceptedPercent = (userHasDolars / collateralInDolarts) * 100;
-
-        const collateralPercent = (value / this.maxPairValue) * 100;
-        const borrowPercent = (this.mainValue / this.userTotalBorrowed) * 100;
-
-        if (
-          acceptedPercent < collateralPercent &&
-          collateralPercent > borrowPercent
-        ) {
-          this.pairValueError = `You have insufficient collateral. Please enter a smaller amount or repay more.`;
-          this.pairValue = value;
-          return false;
-        }
-
-        console.log(collateralPercent, borrowPercent);
-        this.pairValueError = "";
-        this.pairValue = value;
-
-        return false;
-      }
-
-      this.pairValueError = "";
-      this.pairValue = value;
-
-      if (!value) {
-        this.updatePercentValue("");
-        return false;
-      }
-
-      this.updatePercentValue(
-        parseFloat((this.pairValue / this.maxPairValue) * this.ltv).toFixed(4),
-        true
-      );
-    },
-    updatePercentValue(value, fromPair) {
-      this.percentValue = value;
-
-      if (fromPair) return false;
-
-      if (this.mainValue && value) {
-        this.pairValue = (this.maxPairValue * value) / this.ltv;
-      }
-    },
     async getUserBalance() {
       // const balance = await this.signer.getBalance();
 
