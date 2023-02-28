@@ -22,12 +22,15 @@
           >borrow</router-link
         >
 
+        <router-link :to="{ name: 'Wetc' }" class="nav-link"
+          >Get WETC</router-link
+        >
         <!-- <router-link :to="{ name: 'Mim3Pool' }" class="nav-link"
           >MIM3POOL</router-link
         > -->
-        <a href="https://crv.to/pool" target="_blank" class="nav-link"
+        <!-- <a href="https://crv.to/pool" target="_blank" class="nav-link"
           >Get WETC</a
-        >
+        > -->
 
         <a
           href="https://app.sushi.com/swap?inputCurrency=ETH&outputCurrency=0xF62b40F2f32a299D7387C3472A69A5a1bf1De664&chainId=80001"

@@ -18,6 +18,14 @@ const routes = [
     },
     component: () => import("../views/Stand.vue"),
   },
+  {
+    path: "/wetc",
+    name: "Wetc",
+    meta: {
+      needConnection: true,
+    },
+    component: () => import("../views/Wetc.vue"),
+  },
   // {
   //   path: "/farm-stand",
   //   name: "FarmStand",
