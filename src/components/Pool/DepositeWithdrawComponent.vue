@@ -104,14 +104,6 @@ export default {
     },
   },
   computed: {
-    liquidationMultiplier() {
-      return (200 - this.ltv) / 100;
-    },
-    showMax() {
-      if (this.actionType === "borrow") return false;
-
-      return true;
-    },
     maxMainValue() {
       if (this.actionType === "repay") return this.userBalance;
       if (this.actionType === "borrow") {
@@ -129,12 +121,6 @@ export default {
     mainValueTokenName() {
       if (this.actionType === "borrow") return "ETC";
       if (this.actionType === "repay") return "WETC";
-
-      return "XX";
-    },
-    pairValueTokenName() {
-      if (this.actionType === "borrow") return this.tokenPairName;
-      if (this.actionType === "repay") return this.tokenName;
 
       return "XX";
     },
@@ -203,22 +189,6 @@ export default {
     },
   },
   methods: {
-    updateMultiplier(newVal) {
-      this.multiplier = newVal;
-    },
-    updateSlipage(newVal) {
-      this.slipage = newVal;
-    },
-    toggleUpdatePrice() {
-      this.updatePrice = !this.updatePrice;
-    },
-    toggleShowLeverage() {
-      if (this.showLeverage === true) {
-        this.multiplier = 1;
-      }
-
-      this.showLeverage = !this.showLeverage;
-    },
     toFixed(num, fixed) {
       // eslint-disable-next-line no-useless-escape
       let re = new RegExp(`^-?\\d+(?:\.\\d{0,` + (fixed || -1) + `})?`);
