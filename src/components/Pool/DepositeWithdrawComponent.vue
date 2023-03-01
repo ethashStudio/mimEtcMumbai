@@ -218,7 +218,7 @@ export default {
             amount: parsedAmount,
             updatePrice: this.updatePrice,
           };
-          this.$emit("repay", payload);
+          this.$emit("withdrawEtc", payload);
         }
         return false;
       }
