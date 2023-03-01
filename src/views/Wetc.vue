@@ -29,7 +29,7 @@
           :actionType="actionType"
           :balance="pool.userBalance"
           :pairBalance="pool.userPairBalance"
-          @addCollateral="addCollateralHandler"
+          @depositeEtc="depositeEtcHandler"
           @repay="repayHandler"
           :isUpdatePrice="pool.askUpdatePrice"
           :tokenName="pool.token.name"
@@ -51,6 +51,7 @@
 const DepositeWithdrawComponent = () =>
   import("@/components/Pool/DepositeWithdrawComponent");
 const BackButton = () => import("@/components/UiComponents/BackButton");
+import Web3 from "web3";
 
 export default {
   data() {
@@ -80,28 +81,319 @@ export default {
       this.$router.push({ name: "Stand" });
     },
 
-    async addCollateralHandler(data) {
-      console.log("ADD COL HANDLER", data);
-
-      const isTokenApprove = await this.isTokenApprowed(
-        this.pool.token.contract,
-        this.pool.masterContractInstance.address
-      );
-
-      const isApprowed = await this.isApprowed();
-      console.log("iiisTokenApprove", isTokenApprove);
-      console.log("iiiisApprowed", isApprowed);
-
-      if (isTokenApprove) {
-        this.cookAddCollateral(data, isApprowed);
-        return false;
-      }
-
-      const approveResult = await this.approveToken(
-        this.pool.token.contract,
-        this.pool.masterContractInstance.address
-      );
-      if (approveResult) this.cookAddCollateral(data, isApprowed);
+    async depositeEtcHandler(data) {
+      console.log("Deposite ETC process", data);
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      const account0 = accounts[0];
+      console.log(account0);
+      const abi = [
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "src",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "guy",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "wad",
+              type: "uint256",
+            },
+          ],
+          name: "Approval",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "dst",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "wad",
+              type: "uint256",
+            },
+          ],
+          name: "Deposit",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "src",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "dst",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "wad",
+              type: "uint256",
+            },
+          ],
+          name: "Transfer",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "src",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "wad",
+              type: "uint256",
+            },
+          ],
+          name: "Withdrawal",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "allowance",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "guy",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "wad",
+              type: "uint256",
+            },
+          ],
+          name: "approve",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          name: "balanceOf",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "decimals",
+          outputs: [
+            {
+              internalType: "uint8",
+              name: "",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "deposit",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "name",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "symbol",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalSupply",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "dst",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "wad",
+              type: "uint256",
+            },
+          ],
+          name: "transfer",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "src",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "dst",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "wad",
+              type: "uint256",
+            },
+          ],
+          name: "transferFrom",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "wad",
+              type: "uint256",
+            },
+          ],
+          name: "withdraw",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ];
+      const address = this.pool.token.contract.address;
+      web3 = new Web3(window.web3.currentProvider);
+      const contract_etc = new web3.eth.Contract(abi, address);
+      // console.log(contract_etc);
+      // console.log(abi);
+      // console.log(address);
+      console.log("xxxxxxx");
+      console.log(data.amount);
+      await contract_etc.methods
+        .deposit()
+        .send({ from: account0, value: data.amount });
+      // this.pool.token.contract.approve(
+      //   "0xe075bb370e9139fd5b24eb1dafabd56bedfed34d",
+      //   "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      // );
+      //why this is wrong below
+      // await this.pool.tokenContract
+      //   .deposit()
+      //   .send({ from: account0, value: data.amount });
+      console.log(this.pool.token.contract.address);
     },
 
     async repayHandler(data) {
@@ -133,7 +425,22 @@ export default {
 
       const gasPrice = await this.getGasPrice();
       console.log("GAS PRICE:", gasPrice);
-
+      console.log(
+        "this.pool.contractInstance:",
+        this.pool.contractInstance.address
+      );
+      console.log(
+        "this.pool.token.contract:",
+        this.pool.token.contract.address
+      );
+      console.log(
+        "this.pool.pairTokenContract:",
+        this.pool.pairTokenContract.address
+      );
+      console.log(
+        "this.pool.masterContractInstance.address",
+        this.pool.masterContractInstance.address
+      );
       if (isApprowed) {
         console.log("APPROWED");
 
@@ -328,6 +635,22 @@ export default {
       console.log("approvalEncode:", approvalEncode);
       console.log("depositEncode:", depositEncode);
       console.log("colateralEncode:", colateralEncode);
+      console.log(
+        "this.pool.contractInstance:",
+        this.pool.contractInstance.address
+      );
+      console.log(
+        "this.pool.token.contract:",
+        this.pool.token.contract.address
+      );
+      console.log(
+        "this.pool.pairTokenContract:",
+        this.pool.pairTokenContract.address
+      );
+      console.log(
+        "this.pool.masterContractInstance.address",
+        this.pool.masterContractInstance.address
+      );
 
       const result = await this.pool.contractInstance.cook(
         [24, 20, 10],

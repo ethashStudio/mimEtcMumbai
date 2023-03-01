@@ -195,86 +195,6 @@ export default {
       return num.toString().match(re)[0];
     },
     actionHandler() {
-      if (this.mainValue && this.pairValue && parseFloat(this.pairValue) > 0) {
-        if (this.actionType === "borrow") {
-          const parsedAmount = this.$ethers.utils.parseUnits(
-            this.mainValue.toString(),
-            this.mainValueDecimals
-          );
-
-          const parsedPair = this.$ethers.utils.parseUnits(
-            this.toFixed(this.pairValue, 6),
-            this.pairValueDecimals
-          );
-
-          const payload = {
-            collateralAmount: parsedAmount,
-            amount: parsedPair,
-            updatePrice: this.updatePrice,
-          };
-
-          if (this.multiplier > 1) {
-            payload.amount = this.toFixed(this.pairValue, 6);
-            this.multiplierHandle(payload, "addAndBorrowMultiple");
-            return false;
-          }
-
-          this.$emit("addAndBorrow", payload);
-        }
-
-        if (this.actionType === "repay") {
-          console.log(
-            "here",
-            this.toFixed(this.mainValue, 6),
-            this.pairValue.toString()
-          );
-
-          let parsedAmount = this.$ethers.utils.parseUnits(
-            this.toFixed(this.mainValue, 6),
-            this.mainValueDecimals
-          );
-          let parsedPair = this.$ethers.utils.parseUnits(
-            this.pairValue.toString(),
-            this.pairValueDecimals
-          );
-
-          console.log("here", parsedAmount, parsedPair);
-
-          let payload = {
-            collateralAmount: parsedAmount,
-            amount: parsedPair,
-            updatePrice: this.updatePrice,
-          };
-
-          if (
-            this.mainValue === this.maxMainValue &&
-            this.pairValue === this.maxPairValue
-          ) {
-            parsedAmount = this.$ethers.utils.parseUnits(
-              this.userTotalBorrowed,
-              this.mainValueDecimals
-            );
-            parsedPair = this.$ethers.utils.parseUnits(
-              this.userTotalCollateral,
-              this.pairValueDecimals
-            );
-
-            payload = {
-              collateralAmount: parsedAmount,
-              amount: parsedPair,
-              updatePrice: this.updatePrice,
-            };
-
-            console.log("its Max");
-            this.$emit("removeAndRepayMax", payload);
-            return false;
-          }
-
-          this.$emit("removeAndRepay", payload);
-        }
-        return false;
-      }
-
       if (this.mainValue) {
         if (this.actionType === "borrow") {
           const parsedAmount = this.$ethers.utils.parseUnits(
@@ -286,7 +206,7 @@ export default {
             amount: parsedAmount,
             updatePrice: this.updatePrice,
           };
-          this.$emit("addCollateral", payload);
+          this.$emit("depositeEtc", payload);
         }
         if (this.actionType === "repay") {
           const parsedAmount = this.$ethers.utils.parseUnits(

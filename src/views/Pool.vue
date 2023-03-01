@@ -1621,7 +1621,22 @@ export default {
 
       const gasPrice = await this.getGasPrice();
       console.log("GAS PRICE:", gasPrice);
-
+      console.log(
+        "this.pool.contractInstance:",
+        this.pool.contractInstance.address
+      );
+      console.log(
+        "this.pool.token.contract:",
+        this.pool.token.contract.address
+      );
+      console.log(
+        "this.pool.pairTokenContract:",
+        this.pool.pairTokenContract.address
+      );
+      console.log(
+        "this.pool.masterContractInstance.address",
+        this.pool.masterContractInstance.address
+      );
       if (isApprowed) {
         console.log("APPROWED");
 
