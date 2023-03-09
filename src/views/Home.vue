@@ -29,9 +29,8 @@
               will deploy it on ETC mainnet.
             </div>
             <div class="regular-text">
-              Now ask Mumbai faucet for some test Matic, and go to app.sushi.com
-              or any other swap app on Mumbai to swap some WETC. Then try this
-              DApp and enjoy!
+              Now ask Mumbai faucet for some test Matic, and click "GET WETC"
+              button above to get some WETC. Then try this DApp and enjoy!
             </div>
             <div class="regular-text">
               WETC smart contract on Mumbai is
